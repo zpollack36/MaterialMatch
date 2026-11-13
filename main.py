@@ -116,24 +116,31 @@ def materials_page(state: State) -> Page:
     return Page(state, contents)
 
 
-@route
 
+@route
 def calculator_page(state: State) -> Page:
     """Ask for a material and a positive part volume."""
     options = [material.name for material in state.materials]
-    return Page(state, page_content("Mass and cost calculator", "Enter a volume in cm3.") + [
-        Paragraph(state.message),
-        SelectBox("material_name", options, state.selected_material),
-        Paragraph("Volume (cm3):"),
-        TextBox("volume_text", str(state.volume)),
-        Button("Calculate", "calculate_material")
-    ])
+
+    return Page(state, page_content(
+        "Mass and cost calculator",
+        [
+            Paragraph(state.message),
+            SelectBox("material_name", options, state.selected_material),
+            Paragraph("Volume (cm3):"),
+            TextBox("volume_text", str(state.volume)),
+            Button("Calculate", "calculate_material")
+        ]
+    ))
+
 
 
 @route
-
-def calculate_material(state: State, material_name: str,
-                       volume_text: str) -> Page:
+def calculate_material(
+    state: State,
+    material_name: str = "",
+    volume_text: str = ""
+) -> Page:
     """Validate and save the selected material and entered volume."""
     try:
         new_volume = float(volume_text)
